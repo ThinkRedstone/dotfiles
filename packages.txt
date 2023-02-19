@@ -25,4 +25,4 @@ vim
 vlc
 xclip
 xfce4-terminal
-
+git-lfs

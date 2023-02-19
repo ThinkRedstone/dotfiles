@@ -11,7 +11,7 @@ setxkbmap -layout us,il -option 'grp:alt_caps_toggle'
 ( sleep 0.1 && ~/Scripts/startup_programs.sh ) &
 ( sleep 1 && polybar -c ~/.xmonad/polybar example) &
 
-feh --bg-scale ~/.dotfiles/bakuman.png &
+feh --bg-scale ~/.config/wallpaper.png &
 
 # xrandr --setprovideroutputsource modesetting NVIDIA-0
 # xrandr --auto
