@@ -27,3 +27,5 @@ xclip
 xfce4-terminal
 git-lfs
 xorg-xsetroot
+playerctl
+xbindkeys

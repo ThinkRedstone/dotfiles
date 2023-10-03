@@ -19,3 +19,4 @@ config_link xfce4
 
 link bakuman.png ~/.config/wallpaper.png
 link .xinitrc ~/
+link .xbindkeysrc ~/
