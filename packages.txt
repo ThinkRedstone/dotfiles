@@ -5,7 +5,6 @@ iwd
 fish
 dmenu
 chromium
-clementine
 feh
 lxappearance-gtk3
 neofetch
@@ -20,7 +19,6 @@ pulseaudio-alsa
 thunar
 sudo
 powerline-fonts
-powerline-vim
 vim
 vlc
 xclip
