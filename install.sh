@@ -10,7 +10,7 @@ config_link () {
 
 mkdir ~/.config
 
-sudo pacman -S - < packages.txt
+sudo pacman -S --needed - < packages.txt
 
 git lfs install && git lfs pull
 
