@@ -20,3 +20,8 @@ config_link xfce4
 link bakuman.png ~/.config/wallpaper.png
 link .xinitrc ~/
 link .xbindkeysrc ~/
+
+# Brightness Control Permissions
+sudo usermod -a -G video $USER
+sudo cp ./backlight.rules /etc/udev/rules.d/backlight.rules
+

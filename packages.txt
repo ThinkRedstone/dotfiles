@@ -27,3 +27,4 @@ git-lfs
 xorg-xsetroot
 playerctl
 xbindkeys
+acpilight
