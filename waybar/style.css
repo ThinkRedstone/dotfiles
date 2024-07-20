@@ -1,0 +1,129 @@
+@define-color bg_h  #1d2021;
+@define-color bg   #282828;
+@define-color bg_s #32302f;
+@define-color bg1  #3c3836;
+@define-color bg2  #504945;
+@define-color bg3  #665c54;
+@define-color bg4  #7c6f64;
+
+@define-color fg  #fbf1c7;
+@define-color fg1 #ebdbb2;
+@define-color fg2 #d5c4a1;
+@define-color fg3 #bdae93;
+@define-color fg4 #a89984;
+
+@define-color red    #fb4934;
+@define-color green  #b8bb26;
+@define-color yellow #fabd2f;
+@define-color blue   #83a598;
+@define-color purple #d3869b;
+@define-color aqua   #8ec07c;
+@define-color gray   #928374;
+@define-color orange #fe8019;
+
+@define-color red-dim    #cc2412;
+@define-color green-dim  #98971a;
+@define-color yellow-dim #d79921;
+@define-color blue-dim   #458588;
+@define-color purple-dim #b16286;
+@define-color aqua-dim   #689d6a;
+@define-color gray-dim   #a89984;
+@define-color orange-dim #d65d0e;
+
+* {
+  transition: none;
+  box-shadow: none;
+  font-family: "Noto Sans Mono", "JetBrains Mono", "Font Awesome 6 Free";
+}
+
+#waybar {
+  font-size: 1.2em;
+  font-weight: 400;
+  color: @fg;
+  background: @bg;
+}
+
+#workspaces {
+  margin: 0 4px;
+}
+
+#workspaces button {
+  margin: 4px 0;
+  padding: 0 4px;
+  color: @fg;
+}
+
+#workspaces button.visible {
+}
+
+#workspaces button.active {
+  border-radius: 4px;
+  background-color: shade(@red-dim, 0.75);
+}
+
+#workspaces button.urgent {
+  color: @red;
+}
+
+#workspaces button.empty {
+  color: @bg4;
+}
+
+#tray {
+  margin: 4px 4px 4px 4px;
+  border-radius: 4px;
+  background-color: @bg2;
+}
+
+#tray * {
+  padding: 0 6px;
+  /*border-left: 1px solid @bg;*/
+  font-family: "Noto Sans";
+}
+
+#tray *:first-child {
+  border-left: none;
+}
+
+#mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature, #language, #disk {
+  margin: 4px 2px;
+  padding: 0 6px;
+  background-color: @bg2;
+  border-radius: 4px;
+  min-width: 20px;
+}
+
+#disk.critical {
+  background-color: @red;
+}
+
+#pulseaudio.muted {
+  color: @bg4;
+}
+
+#pulseaudio.bluetooth {
+  color: @blue;
+}
+
+#clock {
+  margin-left: 0px;
+  margin-right: 4px;
+  background-color: transparent;
+  color: @red;
+}
+
+#temperature.critical {
+  color: @red;
+}
+
+#window {
+  font-size: 0.9em;
+  font-weight: 400;
+  font-family: sans-serif;
+}
+
+#language {
+  font-size: 0.9em;
+  font-weight: 500;
+  letter-spacing: -1px;
+}

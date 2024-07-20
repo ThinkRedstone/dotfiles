@@ -16,6 +16,9 @@ git lfs install && git lfs pull
 
 config_link fish
 config_link xfce4
+config_link waybar
+config_link kitty
+config_link hypr
 
 link bakuman.png ~/.config/wallpaper.png
 link .xinitrc ~/
