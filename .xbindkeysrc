@@ -66,6 +66,14 @@
     m:0x0 + c:208
     XF86AudioPlay
 
+"playerctl next"
+    m:0x0 + c:171
+    XF86AudioNext
+
+"playerctl previous"
+    m:0x0 + c:173
+    XF86AudioPrev
+
 ##################################
 # End of xbindkeys configuration #
 ##################################
