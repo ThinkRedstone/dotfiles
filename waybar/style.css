@@ -20,7 +20,7 @@
 #workspaces button {
   margin: 4px 0;
   padding: 0 4px;
-  color: @foreground;
+  color: @workspace;
 }
 
 #workspaces button.visible {
@@ -32,7 +32,7 @@
 }
 
 #workspaces button.urgent {
-  color: @highlight;
+  background-color: @highlight;
 }
 
 #workspaces button.empty {

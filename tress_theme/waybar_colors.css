@@ -1,0 +1,13 @@
+
+
+@define-color foreground #4B7939;
+@define-color background #000000;
+@define-color background-highlight #152115;
+
+@define-color foreground-dim #273F27;
+@define-color highlight #CDB129;
+@define-color highlight-dim #796600;
+
+@define-color blue   #007d9d;
+
+@define-color workspace @highlight;

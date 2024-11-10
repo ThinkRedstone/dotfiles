@@ -37,3 +37,5 @@
 @define-color foreground-dim @bg4;
 @define-color highlight @red;
 @define-color highlight-dim shade(@red-dim, 0.75);
+
+@define-color workspace @foreground;
