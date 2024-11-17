@@ -1,10 +1,10 @@
 set -g fish_color_normal normal
 set -g fish_color_command 4B7939
 set -g fish_color_quote b2ab99
-set -g fish_color_redirection 00afff
+set -g fish_color_redirection 007d9d
 set -g fish_color_end 009900
 set -g fish_color_error ff0000
-set -g fish_color_param 00afff
+set -g fish_color_param 007d9d
 set -g fish_color_comment 990000
 set -g fish_color_selection white --bold --background=brblack
 set -g fish_color_search_match bryellow --background=brblack
