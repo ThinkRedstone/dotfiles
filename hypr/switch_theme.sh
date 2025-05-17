@@ -20,4 +20,5 @@ hyprctl hyprpaper wallpaper ,~/.config/theme/wallpaper.png
 # reload kitty conf
 pkill -USR1 -f kitty
 
-killall waybar; waybar >/dev/null 2>&1 & disown
+# reload waybar conf
+pkill -USR2 -f waybar

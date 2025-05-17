@@ -31,6 +31,6 @@ set -g fish_color_option
 set -g fish_pager_color_secondary_completion 
 set -g fish_pager_color_secondary_description 
 set -g fish_color_keyword 
-set -g fish_color_host_remote 
+set -g fish_color_host_remote yellow
 set -g fish_pager_color_secondary_prefix 
 set -g fish_pager_color_secondary_background 

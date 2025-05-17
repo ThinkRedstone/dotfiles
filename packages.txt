@@ -1,6 +1,7 @@
 ttf-hack
 ttf-hack-nerd
 ttf-jetbrains-mono
+otf-font-awesome
 iwd
 fish
 dmenu
@@ -11,6 +12,7 @@ neofetch
 noto-fonts
 noto-fonts-emoji
 noto-fonts-extra
+noto-fonts-cjk
 polybar
 xmonad
 xmonad-contrib
