@@ -16,7 +16,6 @@ git lfs install && git lfs pull
 
 config_link fish
 config_link xfce4
-config_link waybar
 config_link kitty
 config_link hypr
 
@@ -27,4 +26,4 @@ link .xbindkeysrc ~/
 # Brightness Control Permissions
 sudo usermod -a -G video $USER
 sudo cp ./backlight.rules /etc/udev/rules.d/backlight.rules
-
+chsh -s $(which fish)

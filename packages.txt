@@ -7,8 +7,6 @@ fish
 dmenu
 chromium
 feh
-lxappearance-gtk3
-neofetch
 noto-fonts
 noto-fonts-emoji
 noto-fonts-extra
@@ -29,4 +27,8 @@ git-lfs
 xorg-xsetroot
 playerctl
 xbindkeys
-acpilight
+kitty
+hyprland
+hyprpaper
+waybar
+which
