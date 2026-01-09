@@ -19,7 +19,6 @@ config_link xfce4
 config_link kitty
 config_link hypr
 
-link bakuman.png ~/.config/wallpaper.png
 link .xinitrc ~/
 link .xbindkeysrc ~/
 
@@ -27,3 +26,5 @@ link .xbindkeysrc ~/
 sudo usermod -a -G video $USER
 sudo cp ./backlight.rules /etc/udev/rules.d/backlight.rules
 chsh -s $(which fish)
+
+hypr/switch_theme.sh red

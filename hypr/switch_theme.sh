@@ -20,3 +20,8 @@ pkill -USR1 -f kitty
 
 # reload waybar conf
 pkill -USR2 -f waybar
+
+# reload hyprctl (which is suppose to auto reload but doesn't)
+hyprctl reload
+
+pkill -USR1 -f fish
