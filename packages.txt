@@ -32,3 +32,4 @@ hyprland
 hyprpaper
 waybar
 which
+base-devel

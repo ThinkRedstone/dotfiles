@@ -13,8 +13,6 @@ rm ~/.config/theme
 ln -s "$THEME" ~/.config/theme
 
 # reload wallpaper
-hyprctl hyprpaper unload ~/.config/theme/wallpaper.png
-hyprctl hyprpaper preload  ~/.config/theme/wallpaper.png
 hyprctl hyprpaper wallpaper ,~/.config/theme/wallpaper.png
 
 # reload kitty conf
