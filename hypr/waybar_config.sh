@@ -1,6 +1,7 @@
 #!/bin/bash
 
-export MAIN_MONITOR=$(hyprctl -j monitors | jq -r ".[] | select(.description | contains(\"${1}\")) | .name")
+MONITOR_DESC=$(echo -n ${1} | cut -d: -f2)
+export MAIN_MONITOR=$(hyprctl -j monitors | jq -r ".[] | select(.description | contains(\"${MONITOR_DESC}\")) | .name")
 WAYBAR_DIR=$(dirname ${BASH_SOURCE})/../waybar
 
 mkdir -p ${WAYBAR_DIR}
