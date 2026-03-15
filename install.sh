@@ -9,6 +9,7 @@ config_link () {
 }
 
 mkdir ~/.config
+mkdir ~/.config/waybar
 
 sudo pacman -S --needed - < packages.txt
 
