@@ -14,8 +14,6 @@ noto-fonts-cjk
 polybar
 xmonad
 xmonad-contrib
-pulseaudio
-pulseaudio-alsa
 thunar
 sudo
 powerline-fonts
@@ -33,3 +31,8 @@ hyprpaper
 waybar
 which
 base-devel
+dhcpcd
+openssh
+jq
+pavucontrol
+brightnessctl
