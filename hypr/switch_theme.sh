@@ -18,9 +18,6 @@ hyprctl hyprpaper wallpaper ,~/.config/theme/wallpaper.png
 # reload kitty conf
 pkill -USR1 -f kitty
 
-# reload waybar conf
-pkill -USR2 -f waybar
-
 # reload hyprctl (which is suppose to auto reload but doesn't)
 hyprctl reload
 

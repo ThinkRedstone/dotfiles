@@ -1,0 +1,5 @@
+
+return {
+    active_border   = "rgba(CDB129ee)",
+    inactive_border = "rgba(4B7939aa)",
+}
