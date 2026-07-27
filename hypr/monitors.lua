@@ -114,7 +114,7 @@ local function bind_workspaces()
         hl.workspace_rule({ workspace = "9", monitor = roles.left.name, persistent = true, default = true })
     end
     if roles.right then
-        hl.workspace_rule({ workspace = "10", monitor = roles.right.name, persistent = true, default = true, layout_opts = { orientation = "top" } })
+        hl.workspace_rule({ workspace = "10", monitor = roles.right.name, persistent = true, default = true, layout = "lua:vstack" })
     end
 end
 

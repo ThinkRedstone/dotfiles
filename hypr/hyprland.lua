@@ -212,6 +212,20 @@ hl.window_rule({
     pin      = true,
 })
 
+------------------
+---- LAYOUTS ----
+------------------
+
+-- Even vertical stack: every window full-width, equal height, top-to-bottom.
+hl.layout.register("vstack", {
+    recalculate = function(ctx)
+        local n = #ctx.targets
+        if n == 0 then return end
+        for i, target in ipairs(ctx.targets) do
+            target:place(ctx:row(i, n))
+        end
+    end,
+})
 
 ------------------
 ---- MONITORS ----
