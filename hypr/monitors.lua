@@ -9,9 +9,6 @@
 -- keybinds and workspace bindings below.
 local roles = { left = nil, middle = nil, right = nil }
 
--- Only (re)configure waybar when the middle monitor actually changes (see apply()).
-local last_waybar_monitor = nil
-
 --------------------------------------------------------------------------------
 -- Helpers
 --------------------------------------------------------------------------------
@@ -21,11 +18,9 @@ local function place(monitor, position, scale, transform)
 end
 
 -- The internal laptop panel is the output whose name starts with "eDP".
-local function is_laptop(monitor) return monitor.name:sub(1, 3) == "eDP" end
-
 local function find_laptop(monitors)
     for _, monitor in ipairs(monitors) do
-        if is_laptop(monitor) then return monitor end
+        if monitor.name:sub(1, 3) == "eDP" then return monitor end
     end
 end
 
@@ -80,7 +75,7 @@ local CONFIGS = {
 
         local extras = {}
         for _, monitor in ipairs(monitors) do
-            if not is_laptop(monitor) then extras[#extras + 1] = monitor end
+            if monitor.name ~= laptop.name then extras[#extras + 1] = monitor end
         end
         table.sort(extras, function(a, b) return a.name < b.name end)
 
@@ -125,8 +120,7 @@ end
 -- (whose default USR2 action is to terminate) and kill it.
 local function reconfigure_waybar()
     local middle = roles.middle
-    if not middle or middle.name == last_waybar_monitor then return end
-    last_waybar_monitor = middle.name
+    if not middle then return end
     hl.exec_cmd(string.format('~/.config/hypr/waybar_config.sh "%s"', middle.name))
 end
 
