@@ -49,7 +49,7 @@ local CONFIGS = {
         laptop_left(monitors)
         local middle = find_by_serial(monitors, "1M64F84")
         place(middle, "0x0", "auto"); roles.middle = middle
-        local right = find_by_serial(monitors, "8GHVG84")
+        local right = find_by_serial(monitors, "G8JMMF4")
         if right then place(right, "2560x-580", "auto", 1); roles.right = right end
     end,
 
@@ -60,13 +60,19 @@ local CONFIGS = {
         place(middle, "0x0", "auto"); roles.middle = middle
     end,
 
-    -- Dell U2723QE desk: laptop | 2S0SWN3 (middle) | 1V1SWN3 (right, rotated)
-    ["2S0SWN3"] = function(monitors)
+    -- Laptop | Dell U2723QE 1V1SWN3 (middle, over HDMI)
+    ["1V1SWN3"] = function(monitors)
         laptop_left(monitors)
-        local middle = find_by_serial(monitors, "2S0SWN3")
+        local middle = find_by_serial(monitors, "1V1SWN3")
+        place(middle, "0x0", "auto", 0); roles.middle = middle
+    end,
+
+    ["DF3F3P3"] =  function(monitors)
+        laptop_left(monitors)
+        local middle = find_by_serial(monitors, "DF3F3P3")
         place(middle, "0x0", "auto"); roles.middle = middle
-        local right = find_by_serial(monitors, "1V1SWN3")
-        if right then place(right, "2560x-580", "auto", 1); roles.right = right end
+        local right = find_by_serial(monitors, "7K9PWN3")
+        if right then place(right, "2560x-580", "auto", 3); roles.right = right end
     end,
 
     -- Fallback: laptop -> middle, any extra monitors -> left then right (auto placed).
