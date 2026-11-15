@@ -11,7 +11,7 @@ function sshx --wraps ssh --description 'ssh, first rsyncing fish + vim config t
     rsync -azLR -h --info=progress2 -e "ssh $ssh_opts" \
         --exclude /.config/fish/fish_variables \
         --exclude /.vim/plugged --exclude /.vim/.git \
-        ~/./.config/fish ~/./.vim ~/./.gitconfig "$host":
+        ~/./.claude/CLAUDE.md ~/./.config/fish ~/./.vim ~/./.gitconfig "$host":
 
     kitten ssh $argv
 end
