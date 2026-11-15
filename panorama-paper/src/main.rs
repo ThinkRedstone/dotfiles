@@ -14,8 +14,15 @@ use smithay_client_toolkit::{
     compositor::{CompositorHandler, CompositorState, FrameCallbackData},
     delegate_registry,
     output::{OutputHandler, OutputState},
-    reexports::protocols::wp::cursor_shape::v1::client::wp_cursor_shape_device_v1::{
-        Shape, WpCursorShapeDeviceV1,
+    reexports::{
+        calloop::{
+            EventLoop,
+            timer::{TimeoutAction, Timer},
+        },
+        calloop_wayland_source::WaylandSource,
+        protocols::wp::cursor_shape::v1::client::wp_cursor_shape_device_v1::{
+            Shape, WpCursorShapeDeviceV1,
+        },
     },
     registry::{ProvidesRegistryState, RegistryState},
     registry_handlers,
@@ -70,9 +77,10 @@ struct Arguments {
     /// How far the camera looks down, in degrees
     #[arg(long, default_value_t = 10.0, allow_negative_numbers = true)]
     pitch: f32,
-    /// Frame-rate cap; defaults to the monitor refresh rate
-    #[arg(long)]
-    fps: Option<f64>,
+    /// Frames per second. Every frame makes the compositor redraw the whole output, so this is
+    /// what the wallpaper's power draw scales with
+    #[arg(long, default_value_t = 30.0)]
+    fps: f64,
     /// Only draw on these outputs (e.g. DP-6); defaults to all
     #[arg(long = "output")]
     outputs: Vec<String>,
@@ -172,7 +180,9 @@ struct Monitor {
     logical_position: (i32, i32),
     logical_size: (u32, u32),
     scale: i32,
-    last_draw: Option<Instant>,
+    /// Set from presenting until the compositor's frame callback. While set, the previous frame
+    /// isn't on screen yet, or the surface is hidden and the compositor is withholding it.
+    awaiting_frame_callback: bool,
 }
 
 struct App {
@@ -237,26 +247,27 @@ impl App {
             .configure(&mut monitor.target, width * scale, height * scale);
     }
 
-    fn draw(&mut self, index: usize, queue_handle: &QueueHandle<Self>) {
+    /// Pacing comes from the timer rather than from frame callbacks, because answering every
+    /// callback, even with an empty commit, keeps the compositor redrawing at the refresh rate.
+    fn draw_due_monitors(&mut self, queue_handle: &QueueHandle<Self>) {
         self.camera_motion.advance(Instant::now());
+        for index in 0..self.monitors.len() {
+            let monitor = &self.monitors[index];
+            if !monitor.awaiting_frame_callback && monitor.logical_size != (0, 0) {
+                self.draw(index, queue_handle);
+            }
+        }
+    }
+
+    fn draw(&mut self, index: usize, queue_handle: &QueueHandle<Self>) {
         let camera = self.monitor_camera(index);
-        let frame_interval = self
-            .arguments
-            .fps
-            .map(|fps| Duration::from_secs_f64(1.0 / fps));
         let monitor = &mut self.monitors[index];
         let wl_surface = monitor.layer.wl_surface().clone();
         // Requested before presenting, because presenting is what commits the surface.
         wl_surface.frame(queue_handle, FrameCallbackData(wl_surface.clone()));
-        let now = Instant::now();
-        // The slack keeps vsync jitter from skipping a whole extra refresh.
-        let too_early = matches!(
-            (frame_interval, monitor.last_draw),
-            (Some(interval), Some(last_draw)) if now - last_draw + Duration::from_millis(4) < interval
-        );
-        if !too_early && self.renderer.draw(&mut monitor.target, camera) {
-            monitor.last_draw = Some(now);
-        } else {
+        monitor.awaiting_frame_callback = true;
+        if !self.renderer.draw(&mut monitor.target, camera) {
+            // Still commit, so that the callback arrives and the next tick retries.
             wl_surface.commit();
         }
     }
@@ -312,7 +323,7 @@ impl App {
             logical_position,
             logical_size: (0, 0),
             scale: 1,
-            last_draw: None,
+            awaiting_frame_callback: false,
         });
     }
 }
@@ -347,12 +358,12 @@ impl CompositorHandler for App {
     fn frame(
         &mut self,
         _connection: &Connection,
-        queue_handle: &QueueHandle<Self>,
+        _queue_handle: &QueueHandle<Self>,
         surface: &wl_surface::WlSurface,
         _time: u32,
     ) {
         if let Some(index) = self.monitor_index(surface) {
-            self.draw(index, queue_handle);
+            self.monitors[index].awaiting_frame_callback = false;
         }
     }
 
@@ -445,8 +456,9 @@ impl LayerShellHandler for App {
         }
         self.monitors[index].logical_size = configure.new_size;
         self.configure_monitor(index);
-        // Later configures only resize; the frame-callback loop started here keeps running.
+        // Shows the wallpaper right away instead of on the next timer tick.
         if first_configure {
+            self.camera_motion.advance(Instant::now());
             self.draw(index, queue_handle);
         }
     }
@@ -573,6 +585,9 @@ smithay_client_toolkit::delegate_dispatch2!(App);
 
 fn main() -> Result<(), Box<dyn Error>> {
     let arguments = Arguments::parse();
+    if !arguments.fps.is_finite() || arguments.fps <= 0.0 {
+        return Err("--fps must be positive".into());
+    }
     let panorama = Panorama::load(&arguments.panorama)?;
     let mut renderer = Renderer::new(&panorama)?;
     drop(panorama);
@@ -595,7 +610,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     let connection = Connection::connect_to_env()?;
-    let (globals, mut event_queue) = registry_queue_init(&connection)?;
+    let (globals, event_queue) = registry_queue_init(&connection)?;
     let queue_handle = event_queue.handle();
     let mut app = App {
         registry_state: RegistryState::new(&globals),
@@ -603,7 +618,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         seat_state: SeatState::new(&globals, &queue_handle),
         compositor: CompositorState::bind(&globals, &queue_handle)?,
         layer_shell: LayerShell::bind(&globals, &queue_handle)?,
-        connection,
+        connection: connection.clone(),
         renderer,
         monitors: Vec::new(),
         camera_motion: CameraMotion {
@@ -618,7 +633,20 @@ fn main() -> Result<(), Box<dyn Error>> {
         cursor_shape_manager: CursorShapeManager::bind(&globals, &queue_handle).ok(),
         cursor_shape_device: None,
     };
+    let frame_interval = Duration::from_secs_f64(1.0 / app.arguments.fps);
+    let mut event_loop = EventLoop::<App>::try_new()?;
+    let loop_handle = event_loop.handle();
+    WaylandSource::new(connection, event_queue).insert(loop_handle.clone())?;
+    loop_handle.insert_source(
+        Timer::from_duration(frame_interval),
+        move |deadline, _, app| {
+            app.draw_due_monitors(&queue_handle);
+            // Scheduled from the deadline so ticks don't drift, but never into the past, so a
+            // stall doesn't cause a burst of catch-up frames.
+            TimeoutAction::ToInstant((deadline + frame_interval).max(Instant::now()))
+        },
+    )?;
     loop {
-        event_queue.blocking_dispatch(&mut app)?;
+        event_loop.dispatch(None, &mut app)?;
     }
 }
